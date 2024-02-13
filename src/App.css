@@ -88,3 +88,15 @@ a{
     right: 40px;
   }
 }
+a{
+  text-decoration: none !important;
+}
+
+.categorySliderArrow .slick-slide img{
+  width: 115px;
+  max-width: 100%;
+  height: auto;
+  max-height: 121px;
+  object-fit: cover;
+  border-radius: 9px;
+}

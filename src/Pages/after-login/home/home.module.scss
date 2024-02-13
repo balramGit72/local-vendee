@@ -37,7 +37,7 @@
             width: 80%;
             background-color: $secondaryRed;
             border-radius: 10px;
-            padding: 30px 10px;
+            padding: 10px 10px;
             @include ipad{
                 width: 77%;
             }
@@ -92,6 +92,12 @@
                     }
                 }
             }
+
+            img{
+                height: 344px;
+                object-fit: cover;
+            }
+
          }
          .homeBannerBtn{
             width: 20%;

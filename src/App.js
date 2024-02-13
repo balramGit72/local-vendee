@@ -4,6 +4,8 @@ import { routes } from './routes';
 import { gapi } from 'gapi-script';
 import { useDispatch, useSelector } from 'react-redux';
 import { setLatAndLon } from './redux/AuthRedux/auth';
+import './App.css';
+
 
 function App() {
   const auth = useSelector((state) => state.auth);

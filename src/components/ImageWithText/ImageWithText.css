@@ -3,9 +3,16 @@
   .overlay {
     bottom: 0;
     left: 0;
-    background-color: #9E1624; /* Semi-transparent black background */
+    background-color: #9E1624;
     color: white;
-    padding: 10px;
+    /* padding: 10px; */
     border-radius: 50%;
+    width: 41px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    font-size: 18px;
+    font-weight: 600;
   }
   

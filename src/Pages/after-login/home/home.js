@@ -449,10 +449,10 @@ const Home = () => {
                 for now.
               </Text>
               <div>
-                <Link to="#" className={`${Styles.mr20}`}>
+                <Link to="https://play.google.com/store/apps/details?id=com.local_vendee.userapp" target="_blank" className={`${Styles.mr20}`}>
                   <Image src="assets/image/appleBlack.png" alt="apple store" />
                 </Link>
-                <Link to="#">
+                <Link to="https://play.google.com/store/apps/details?id=com.local_vendee.userapp" target="_blank">
                   <Image
                     src="assets/image/playStoreBlack.png"
                     alt="google store"

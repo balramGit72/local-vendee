@@ -1,0 +1,40 @@
+@import "../../../assets/scss/variables.scss";
+@import "../../../assets/scss/mixins.scss";
+.input {
+  &:focus-visible {
+    outline: none;
+  }
+  &:focus{
+    outline: none;
+  }
+  &:disabled {
+    cursor: not-allowed;
+  }
+  &.primaryInput{
+    border-radius: 8px;
+    border: $primaryBorder;
+    color: $black;
+    font-size: $font-md;
+    font-weight: 300;
+    line-height:1; 
+    padding: 12px 10px;
+    &::placeholder{
+      color: #A6A6A6;
+    }
+  }
+  &.secondaryInput{
+    border-radius: 8px;
+    border: 0;
+    color: $black;
+    font-size: $font-md;
+    font-weight: 300;
+    line-height:1; 
+    padding: 12px 10px;
+    background-color: #f5f5f5;;
+  }
+}
+
+textarea{
+  font-family: 'Poppins', sans-serif;
+  resize: none;
+}

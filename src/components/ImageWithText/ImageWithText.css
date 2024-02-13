@@ -1,0 +1,11 @@
+
+
+  .overlay {
+    bottom: 0;
+    left: 0;
+    background-color: #9E1624; /* Semi-transparent black background */
+    color: white;
+    padding: 10px;
+    border-radius: 50%;
+  }
+  

@@ -1,0 +1,116 @@
+@import './../../../assets/scss/variables.scss';
+@import './../../../assets/scss/mixins.scss';
+
+.checkboxWrapper {
+    display: block;
+
+    .checkedSection {
+        position: relative;
+        padding-left: 20px;
+        height: 24px;
+        cursor: pointer;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+        display: flex;
+        align-items: center;
+        line-height: 100%;
+        @include mo{
+            height: auto;
+        }
+        &.displayBlock {
+            display: block;
+        }
+
+        input {
+            position: absolute;
+            opacity: 0;
+            cursor: pointer;
+            height: 0;
+            width: 0;
+        }
+
+        input:checked~.checkmark:after {
+            display: block;
+            width: 50%;
+            height: 50%;
+            border-radius: 50%;
+            position: absolute;
+            left: 0;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            margin: auto;
+        }
+
+        .checkmark {
+            position: absolute;
+            top: 2px;
+            left: 0;
+            height: 20px;
+            width: 20px;
+            box-sizing: border-box;
+            border-radius: 50%;
+            background-color: transparent;
+            border: 2px solid $lightGrey;
+            @include md{
+                height: 20px;
+                width: 20px;
+                top:1px;
+            }
+            @include mo{
+                height: 16px;
+                width: 16px;
+                top:0px;
+            }
+
+            &:after {
+                content: "";
+                position: absolute;
+                display: none;
+                left: 0;
+                top: 0;
+                right: 0;
+                bottom: 0;
+                width: 50%;
+                height: 50%;
+                margin: auto;
+                background:#FF1818;
+            }
+        }
+        .nameWrapper {
+            font-weight: 400;
+            font-size: $font-md;
+            line-height: 100%;
+            color: $black;
+            padding-left: 12px;
+            @include mo{
+                font-size: $font-sm;
+            }
+        }   
+    }
+
+    
+    .checkedSection {
+        .checkmark {
+          top:0;
+          bottom: 0;
+          margin:auto;
+        }
+        &.multiLabel{
+            flex-direction: column;
+            height: auto;
+            .nameWrapper{
+                width: 100%;
+                font-weight: 600;
+                margin-bottom: 3px;
+            }
+            .subLabel{
+                width: 100%;
+                padding-left: 12px;
+                font-size: $font-sm;
+            }
+        }
+    }
+}

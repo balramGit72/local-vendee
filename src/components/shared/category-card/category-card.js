@@ -80,7 +80,7 @@ const CategoryCard = ({variant,to,className,onClick,src,off,time,productname,pro
                 </Text>
                 {rating !== null && rating !== undefined &&
                 <div className={`${Styles.alignBetween} ${Styles.alignItemsCenter} ${Styles.ratingBox}`}>
-                  <Image src="assets/image/icon/star.svg" alt="star" className={`${Styles.ratingIcon}`} />
+                  <Image src="/assets/image/icon/star.svg" alt="star" className={`${Styles.ratingIcon}`} />
                   <Text color="black" strong="strong4" variant="smText" className={`${Styles.rating}`}>{rating}</Text>
                 </div>
                 }
@@ -94,7 +94,7 @@ const CategoryCard = ({variant,to,className,onClick,src,off,time,productname,pro
                   {productinfo}
               </Text>
               <div className={`${Styles.addressBlock}`}>
-                <Image src="assets/image/icon/location.svg" alt="location" className={`${Styles.mr10} ${Styles.addressIcon}`}/>
+                <Image src="/assets/image/icon/location.svg" alt="location" className={`${Styles.mr10} ${Styles.addressIcon}`}/>
                 <Text color="black" strong="strong4" variant="mdText" className={`${Styles.inter}`}>{address}</Text>
               </div>
               <div className={`${Styles.priceBlock} ${Styles.dFlex}`}>

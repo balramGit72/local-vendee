@@ -3,11 +3,13 @@ import Styles from './classified-product.module.scss';
 import { Layout } from "../../../components/common";
 import {CategoryCard,RadioBtn,ListGroup, ListItem, Text, Button, Heading } from "../../../components/shared";
 import { useParams } from "react-router-dom";
-import { classifiedSubCategoryApiById } from '../../../service/classifiedProduct'
+import { classifiedSubCategoryApiById , addToFavoriteApi } from '../../../service/classifiedProduct'
+import { useSelector } from "react-redux";
+import { toast } from "react-toastify";
 
 const ClassifiedProduct = () => {
    const { id } = useParams();
-
+   const auth = useSelector((state) => state.auth);
    const [allCategory3, setAllCategory3] = useState([]);
  
    const classifiedSubCategory = async () =>{
@@ -17,8 +19,22 @@ const ClassifiedProduct = () => {
          setAllCategory3(data.data);
       }
      } catch (error) {
+     console.log('error: ', error);
      }
    }
+
+   const addToFavorite = async (vender_id) =>{
+      try {
+       const {data} = await addToFavoriteApi(auth.user.id,vender_id)
+       if(data.success) {
+         toast.success("Add To Favorite ");
+       }else{
+          toast.error("Add To Favorite failed ");
+       }
+      } catch (error) {
+      toast.error("Add To Favorite failed ");
+      }
+    }
 
    useEffect(()=>{
       classifiedSubCategory();
@@ -51,12 +67,12 @@ const ClassifiedProduct = () => {
                {allCategory3.map((item)=>{
                   return  <CategoryCard
                   to="#"
-                  src="assets/image/category/car1.png"
+                  src="/assets/image/category/car1.png"
                   productname={item.name}
-                  
                   productinfo="Jai Bhawani Colony, Jaipur"
                   variant="bestProduct"
                   price="$260"
+                  favoriteClick={()=>addToFavorite(item.id)}
                />
                })}
                 {/* <CategoryCard

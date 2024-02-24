@@ -24,3 +24,20 @@ export const FORM_ERRORS = {
   phone: "Please enter your phone number",
   password: "Please enter your password",
 };
+
+
+export const sixDigitRandomNumber = Math.floor(100000 + Math.random() * 900000);
+
+
+export const convertToTime = (distance,speed) => {
+  const distanceInMeters = parseFloat(distance);
+  const speedInMetersPerMinute = parseFloat(speed);
+
+  if (!isNaN(distanceInMeters) && !isNaN(speedInMetersPerMinute)) {
+    const timeInMinutes = distanceInMeters / speedInMetersPerMinute;
+    const data =Math.floor(parseFloat(timeInMinutes))
+    return data;
+  } else {
+    return 0;
+  }
+};

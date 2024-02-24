@@ -1,23 +1,23 @@
-import React, { useEffect, useState } from "react";
-import Styles from '../login/login.module.scss';
+import React, {useState, useEffect } from "react";
+import Styles from './login.module.scss';
 import { Layout } from "../../../components/common";
 import { Button, Heading, Image, Input, Text } from "../../../components/shared";
-import { Link,useNavigate } from 'react-router-dom';
-import { toast, ToastContainer } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
-import 'react-toastify/dist/ReactToastify.css';
-import { loginApiFun } from "../../../service/auth";
-import { ERROR_MESSAGES_LOGIN, initialValueLogin }
+import { forgetPasswordApi } from "../../../service/auth";
+import { ERROR_MESSAGES_LOGIN, initialValueLogin, sixDigitRandomNumber }
  from "../../../helpers/constant";
-import { setLogin } from "../../../redux/AuthRedux/auth";
+import { setLogin, setOtp } from "../../../redux/AuthRedux/auth";
 import { useDispatch } from "react-redux";
 
-const Login = () => {
+const ForgetPassword = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [formData, setFormData] = useState(initialValueLogin);
   const [errors, setErrors] = useState(initialValueLogin);
   const [loading, setLoading] = useState(false);
+  const[getModal, setModal] = useState(false)
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -30,32 +30,29 @@ const Login = () => {
       newErrors.email = ERROR_MESSAGES_LOGIN.emailRequired;
       formValid = false;
     }
-    if (formData.password.trim() === '') {
-      newErrors.password = ERROR_MESSAGES_LOGIN.passwordRequired;
-      formValid = false;
-    }
     if (!formValid) {
       setErrors(newErrors);
       return;
     }
     try {
+      formData.otp= sixDigitRandomNumber;
       setLoading(true);
-      const { data } = await loginApiFun(formData);
+      dispatch(setOtp(formData.otp))
+      const { data } = await forgetPasswordApi(formData);
       if (data.success) {
         setFormData(initialValueLogin);
         setErrors(initialValueLogin);
-        console.log('data.data: ', data.data);
         dispatch(setLogin(data.data));
-        toast.success(ERROR_MESSAGES_LOGIN.loginSuccess, { autoClose: 2000 });
-        setTimeout(()=>{
-          navigate('/');
-        },2000)
+        // toast.success(data.message, { autoClose: 2000 });
+        setModal(true);
       } else {
         toast.error(data.message, { autoClose: 2000 });
       }
     } catch (error) {
-      toast.error(ERROR_MESSAGES_LOGIN.loginFailed, { autoClose: 2000 });
+      toast.error("Sever  Error", { autoClose: 2000 });
     } finally {
+      setModal(true);
+
       setLoading(false);
     }
   };
@@ -71,6 +68,14 @@ const Login = () => {
       [name]: ''
     }));
   };
+
+  useEffect(() => {
+     if (getModal === false) {
+      document.body.style.overflow = 'unset';
+     } else {
+      document.body.style.overflow = 'hidden';
+     }
+  }, [getModal]);
 
   return (
     <Layout>
@@ -88,12 +93,11 @@ const Login = () => {
                   <Heading
                     color="black"
                     headingType={"h2"}
-                    headingText={"Log in to Exclusive"}
+                    headingText={"Forget The Password"}
                     className={`${Styles.loginHeading}`}
                     strong="strong5"
                   />
                   <Text color="black" variant="lgText" strong="strong4" className={`${Styles.dBlock} ${Styles.enterDetail}`}>
-                    Enter your details below
                   </Text>
                   <div className={`${Styles.formWrapper}`}>
                     <div className={`${Styles.inputBox}`}>
@@ -107,25 +111,10 @@ const Login = () => {
                       />
                       <Text className={`${Styles.errorMessage}`}>{errors.email}</Text>
                     </div>
-                    <div className={`${Styles.inputBox}`}>
-                      <Input
-                        placeholder="Password"
-                        type="password"
-                        variant="primaryInput"
-                        className={`${Styles.w100}`}
-                        name="password"
-                        value={formData.password}
-                        onChange={handleChange}
-                      />
-                      <Text className={`${Styles.errorMessage}`}>{errors.password}</Text>
-                    </div>
                     <div className={`${Styles.btnWrapper} ${Styles.alignBetween} ${Styles.alignItemsCenter}`}>
                       <Button type="submit" variant="redBtn" disabled={loading}>
-                        {loading ? 'Logging in...' : 'Log In'} {/* Show loading text if loading is true */}
+                        {loading ? 'Submit in...' : 'Submit'} 
                       </Button>
-                      <div className={`${Styles.haveAccountWrapper} ${Styles.textCenter}`}>
-                        <Link to="/forgetPassword"><Text color="red">Forget Password?</Text></Link>
-                      </div>
                     </div>
                   </div>
                 </form>
@@ -134,9 +123,29 @@ const Login = () => {
           </div>
         </div>
       </div>
-      <ToastContainer />
+      {getModal && (
+        <div className={`${Styles.modalOverlay}`}>
+          <div className={`${Styles.modalBody}`}>
+          <div className={`${Styles.modalHeader} ${Styles.textCenter}`}>
+          <div className={`${Styles.dFlex}`}>
+            <div className={`${Styles.filterCheckWrapper}`}>
+            An OTP has been sent to your email for updating your account password. You should have received an email containing a link. By clicking on that link, you'll be directed to a form where you can enter the OTP and update your password. This process strengthens our security measures and keeps your account safe.
+<br />
+Please note, the OTP can only be used once and is valid for a limited time, so please use it promptly.
+
+ <br />
+ <div className={`${Styles.btnWrapper} ${Styles.alignBetween} ${Styles.alignItemsCenter}`}>
+                      
+ <Button variant="redBtn" onClick={()=> setModal(false)}>OK</Button>
+              </div>
+              </div>
+              </div>
+              </div>
+          </div>
+        </div>
+      )}
     </Layout>
   );
 };
 
-export default Login;
+export default ForgetPassword;

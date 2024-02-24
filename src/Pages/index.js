@@ -15,7 +15,9 @@ from "./after-login";
 
 import {
     Login,
-    Signup
+    Signup,
+    ForgetPassword,
+    UpdatePassword,
  } 
  from "./before-login";
 
@@ -32,5 +34,7 @@ export {
     ContactUs,
     ProductDetail,
     ClassifiedDetail,
-    ClassifiedProduct
+    ClassifiedProduct,
+    ForgetPassword,
+    UpdatePassword,
 }

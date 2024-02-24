@@ -5,7 +5,10 @@ const initialState = {
 	token: "",
 	myLat:'',
 	myLon:"",
-	user:""
+	user:"",
+	zone_id:"",
+	setting:{},
+	otp: "",
 };
 
 const authSlice = createSlice({
@@ -26,8 +29,17 @@ const authSlice = createSlice({
 		clearToken(state) {
 			state.token = "";
 		},
+		setZone(state,action) {
+			state.zone_id = action.payload
+		},
+		setSetting(state, action){
+			state.setting=action.payload;
+		},
+		setOtp(state, action){
+			state.otp=action.payload;
+		}
 	},
 });
 
-export const { setToken, clearToken, setLatAndLon, setLogin } = authSlice.actions;
+export const { setToken, clearToken, setLatAndLon, setLogin, setZone, setSetting, setOtp } = authSlice.actions;
 export default authSlice.reducer;

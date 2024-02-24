@@ -1,10 +1,28 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Styles from './wishlist.module.scss';
 import { Layout } from "../../../components/common";
 import { Text, Button, CategoryCard} from "../../../components/shared";
+import { useSelector } from "react-redux";
+import { getFavoritesApi } from "../../../service/classifiedProduct";
 
 const Wishlist = () => {
-  
+   const auth = useSelector((state) => state.auth);
+  const [favorites, setFavorites] = useState([]);
+
+  const getFavorites = async () => {
+    try {
+      const { data } = await getFavoritesApi(
+         auth.user.id,
+      );
+      if (data.success) {
+         setFavorites(data.data);
+      }
+    } catch (error) {}
+  };
+
+  useEffect(() => {
+    getFavorites();
+  }, []);
   return (
     <Layout>
         <div className={`${Styles.wishlist}`}>
@@ -19,7 +37,17 @@ const Wishlist = () => {
             </div>
               
               <div className={`${Styles.row} ${Styles.categoryRow}`}>
-                <CategoryCard
+               {favorites?.map((item)=>{
+                  return <CategoryCard
+                  to="#"
+                  src={item.image} 
+                  productname={item.display_name}
+                  rating={item.rating_total}
+                  productinfo={item.display_name}
+                  variant="wishlist"
+               />
+               })}
+                {/* <CategoryCard
                    to="#"
                    src="assets/image/category/watchx.png" 
                    productname="TIMEX"
@@ -104,7 +132,7 @@ const Wishlist = () => {
                    variant="bestProduct"
                    price="$260"
                    strikePrice="$360"
-                />
+                /> */}
               </div>
            </div>
         </div>

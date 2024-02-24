@@ -4,11 +4,13 @@ import { Button, Text, Image } from "../../shared";
 import { Link } from "react-router-dom";
 import ImageWithText from "../../ImageWithText";
 import { useSelector } from "react-redux";
+import { ToastContainer } from "react-toastify";
 
 const Header = () => {
   const auth = useSelector((state) => state.auth);
   return (
     <div className={Styles.headerWraper}>
+        <ToastContainer />
       <div className={`${Styles.statusBarSection}`}>
         <div
           className={`${Styles.statusBarwrapper} ${Styles.w100} ${Styles.alignBetween} ${Styles.mAuto} ${Styles.alignItemsCenter}`}
@@ -27,7 +29,7 @@ const Header = () => {
         >
           <div className={`${Styles.logoBrand} `}>
             <Link to="/">
-              <Image src="assets/image/Logo.png" />
+              <Image src="/assets/image/Logo.png" />
             </Link>
           </div>
           <div className={`${Styles.headerBtnWrapper} ${Styles.centerAlign}`}>
@@ -56,10 +58,14 @@ const Header = () => {
                   Johan Doe
                 </Link> */}
             <Button className={`${Styles.favBtn}`}>
+            <Link to="/wishlist" >
               <span class="material-symbols-rounded">favorite</span>
+              </Link>
             </Button>
             <Button>
+            <Link to="/payment" >
               <span class="material-symbols-rounded">shopping_cart</span>
+              </Link>
             </Button>
           </div>
         </div>

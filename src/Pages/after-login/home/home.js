@@ -90,7 +90,8 @@ const Home = () => {
         const { data } = await debouncedSearchApi(
           value,
           auth.myLat,
-          auth.myLon
+          auth.myLon,
+          auth.zone_id,
         );
         if (data.success) {
           const productList = data.data.item?.flatMap((item) => {
@@ -329,7 +330,7 @@ const Home = () => {
                   allCategory.map((item) => {
                     return (
                       <SlideCard
-                        to={"#"}
+                        to={`/category/${item.id}/${item.name}`}
                         src={item.banner}
                         product={item.name}
                       />
@@ -369,7 +370,7 @@ const Home = () => {
                   allCategory2.map((item) => {
                     return (
                       <SlideCard
-                        to={"#"}
+                        to={`/top-product/${item.id}`}
                         src={item.banner}
                         product={item.name}
                       />

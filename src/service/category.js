@@ -6,6 +6,7 @@ const getProductListByCatIdApi = async(id,myLat, myLon) => {
         
         let config = {
           method: 'get',
+          // url: `${API_BASE_URL}/getProductlistByCatId?category_id=${id}&myLat=${myLat}&myLon=${myLon}`,
           url: `${API_BASE_URL}/getProductlistByCatId?category_id=1&myLat=22.8225&myLon=75.2522`,
           headers: { 
           },
@@ -30,7 +31,20 @@ const productListApi = async(cartId, userId) => {
         
   let config = {
     method: 'get',
-    url: `${API_BASE_URL}/shopSetting/productList/${cartId}/${userId}`,
+    url: `${API_BASE_URL}/shopSetting/productList/${cartId}/${userId}?myLat=22.8225&myLon=75.252264`,
+    // url:`${API_BASE_URL}/shopSetting/productList/9/${userId}?myLat=22.8225&myLon=75.252264`,
+    headers: { 
+    },
+  };
+return await axios.request(config);
+}
+
+const deleteCartItemAPi = async(cartId, userId) => {
+        
+  let config = {
+    method: 'get',
+    url: `${API_BASE_URL}/deleteCartItem/${cartId}`,
+    // url:`${API_BASE_URL}/shopSetting/productList/9/${userId}?myLat=22.8225&myLon=75.252264`,
     headers: { 
     },
   };
@@ -55,10 +69,23 @@ return await axios.request(config);
 }
 
 
+const hCategoriesApi = async() => {
+        
+  let config = {
+    method: 'get',
+    url: `${API_BASE_URL}/h_categories`,
+    headers: { 
+    },
+  };
+return await axios.request(config);
+}
+
 export {
     getProductListByCatIdApi,
     shopSettingApi,
     productListApi,
     addToCartApi,
     // addToFavoriteApi,
+    hCategoriesApi,
+    deleteCartItemAPi,
 }

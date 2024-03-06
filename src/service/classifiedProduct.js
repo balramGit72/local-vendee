@@ -14,7 +14,7 @@ const classifiedSubCategoryApiById = async (id) => {
 const getFavoritesApi = async (id) => {
   let config = {
     method: "get",
-    url: `${API_BASE_URL}/getFavorites?user_id=1`,
+    url: `${API_BASE_URL}/getFavorites?user_id=${id}`,
     headers: {},
   };
   return await axios.request(config);

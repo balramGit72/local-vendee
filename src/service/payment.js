@@ -12,6 +12,28 @@ const getCartListApi = async(userId) => {
 return await axios.request(config);
 }
 
+const deleteAddressApi = async(id) => {
+        
+  let config = {
+    method: 'get',
+    url: `${API_BASE_URL}/deleteAddress/${id}`,
+    headers: { 
+    },
+  };
+return await axios.request(config);
+}
+
+const stripurlApi = async(url) => {
+        
+  let config = {
+    method: 'get',
+    url,
+    headers: { 
+    },
+  };
+return await axios.request(config);
+}
+
 const handleAddAddressApi = async(formData, auth) => {
   let data = new FormData();
   data.append('user_id', auth.user.id);
@@ -34,4 +56,6 @@ return await axios.request(config);
 export {
     getCartListApi,
     handleAddAddressApi,
+    stripurlApi,
+    deleteAddressApi,
 }

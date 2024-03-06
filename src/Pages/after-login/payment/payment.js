@@ -3,11 +3,13 @@ import Styles from "./payment.module.scss";
 import { Layout } from "../../../components/common";
 import { Text, Button, RadioBtn, Image, ListGroup } from "../../../components/shared";
 import { Link } from "react-router-dom";
-import { getCartListApi, handleAddAddressApi } from "../../../service/payment";
+import { deleteAddressApi, getCartListApi, handleAddAddressApi } from "../../../service/payment";
 import { useSelector } from "react-redux";
 import { getAddressListApi, getCouponsApi } from "../../../service/home";
 import { Input, ListItem } from "@mui/material";
 import { toast } from "react-toastify";
+import { addToCartApi, deleteCartItemAPi } from "../../../service/category";
+import AddressAutocomplete from "./AddressAutocomplete";
 
 const Payment = () => {
   const [cardList, setCardList] = useState([]);
@@ -57,39 +59,82 @@ const Payment = () => {
   const handleAddAddress = async (event) => {
   event.preventDefault();
     try {
-      // Call your API with the address data
-      // Replace 'yourApiFunction' with the actual function to call your API
       const {data} = await handleAddAddressApi({ address:address1, phone }, auth);
-      console.log('data: ', data);
       
-      // Check the response and handle accordingly
       if (data.success) {
         getAddressList();
-        // Handle success, e.g., close the modal, show a success message, etc.
         setModal(false);
+        setAddress1("");
         toast.success(data.message, { autoClose: 2000 });
-        // Additional actions...
       } else {
-        // Handle API error, set an error message or perform other actions
         toast.error(data.message, { autoClose: 2000 });
       }
     } catch (error) {
       console.error('Error calling API:', error);
-      // Handle other errors if needed
     }
   };
 
+  const deleteCartItem = async (card_id) => {
+      try {
+        const {data} = await deleteCartItemAPi(card_id);
+        
+        if (data.success) {
+          getCartList();
+          toast.success(data.message, { autoClose: 2000 });
+        } else {
+          toast.error(data.message, { autoClose: 2000 });
+        }
+      } catch (error) {
+        console.error('Error calling API:', error);
+        // Handle other errors if needed
+      }
+    };
+
+
+    const addToCart = async (id, variant_id, product_id, card_qty) => {
+      try {
+  
+        const { data } = await addToCartApi(
+          auth?.user?.id,
+          product_id,
+          Number(card_qty)+ 1,
+          variant_id
+        );
+        if (data.success) {
+          getCartList();
+          toast.success("Item added success");
+        } else {
+          toast.error("Item added failed");
+        }
+      } catch (error) {
+        console.log("error: ", error);
+        toast.error("Item added failed");
+      }
+    };
+  
   useEffect(() => {
     getCartList();
     getCoupons();
     getAddressList();
   }, []);
+
+  const handleDeleteAddress = async (id) => {
+    try {
+      const {data} = await deleteAddressApi(id);      
+      if (data.success) {
+        getAddressList();
+      }
+    } catch (error) {
+      console.error('Error deleting address:', error);
+    }
+  };
   return (
     <Layout>
       <div className={`${Styles.paymentWrapper}`}>
         <div className={`${Styles.center}`}>
           <div className={`${Styles.paymentRow} ${Styles.dFlex}`}>
             <div className={`${Styles.paymentMethodCol}`}>
+              
               <div className={`${Styles.card}`}>
                 <Text
                   strong="strong7"
@@ -245,13 +290,18 @@ const Payment = () => {
                           <div
                             className={`${Styles.productBtnWrapper} ${Styles.dFlex}`}
                           >
-                            <Button>
+                            <Button onClick={()=>deleteCartItem(item.card_id)}>
                               <span class="material-symbols-rounded">
                                 remove
                               </span>
                             </Button>
-                            <Button>1</Button>
-                            <Button>
+                            <Button>{item.card_qty}</Button>
+                            <Button onClick={()=>  addToCart(
+                                item?.id,
+                                item.variant_2_id,
+                                item.product_id,
+                                item.card_qty
+                              )}>
                               <span class="material-symbols-rounded">add</span>
                             </Button>
                           </div>
@@ -297,13 +347,13 @@ const Payment = () => {
                 <div className={`${Styles.productInfoWrapper}`}>
                   <div className={`${Styles.alignBetween} ${Styles.mb10}`}>
                     <Text className={`${Styles.pr5}`}>Item Total</Text>
-                    <Text>$154.00</Text>
+                    <Text>${cardList?.sub_totel}</Text>
                   </div>
                   <div className={`${Styles.alignBetween} ${Styles.pb5}`}>
                     <Text className={`${Styles.pr5}`}>
                       Delivery Fee | 3.7 kms
                     </Text>
-                    <Text>$14.00</Text>
+                    <Text>${cardList?.driver_commission}</Text>
                   </div>
 
                   <div
@@ -312,7 +362,7 @@ const Payment = () => {
                     <Text className={`${Styles.pr5}`}>
                       GST and Restaurant Charges
                     </Text>
-                    <Text>$10.00</Text>
+                    <Text>${cardList?.admin_fee}</Text>
                   </div>
                 </div>
 
@@ -321,7 +371,7 @@ const Payment = () => {
                     Total Pay
                   </Text>
                   <Text color="black" strong="strong7" variant="mdText">
-                    $150.00
+                    ${cardList?.grand_totel}
                   </Text>
                 </div>
               </div>
@@ -346,13 +396,8 @@ const Payment = () => {
             <div className={`${Styles.dFlex}`}>
             <div className={`${Styles.filterCheckWrapper}`}>
               <form onSubmit={handleAddAddress}>
-                  <Input
-                    type="text"
-                    name="address"
-                    value={address1}
-                    onChange={(e) => setAddress1(e.target.value)}
-                    placeholder="Enter your address"
-                  />
+              <AddressAutocomplete  address={address1} setAddress={setAddress1} />
+              <br />
                     <Input
                     type="text"
                     name="phone"
@@ -364,6 +409,15 @@ const Payment = () => {
                     Add Address
                   </Button>
               </form>
+              <ul className={`${Styles.addressList}`} >
+        {address.map((address) => (
+          <li key={address.id}>
+            {address.address}
+            <button onClick={() => handleDeleteAddress(address.id)}>Delete</button>
+          </li>
+        ))}
+      </ul>
+
               </div>
             </div>
           </div>

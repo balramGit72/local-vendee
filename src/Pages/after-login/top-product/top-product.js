@@ -11,14 +11,19 @@ import {
   RadioBtn,
 } from "../../../components/shared";
 import { getProductListByCatIdApi } from "../../../service/category";
-import { useParams } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { Navigate, useNavigate, useParams } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 import { convertToTime } from "../../../helpers/constant";
+import { addToFavoriteApi } from "../../../service/classifiedProduct";
+import { toast } from "react-toastify";
+import { setWishlistCount } from "../../../redux/AuthRedux/auth";
 
 const TopProduct = () => {
+  const navigate = useNavigate();
   const auth = useSelector((state) => state.auth);
   const { id } = useParams();
   const [category, setAllCategory] = useState([]);
+  const dispatch = useDispatch();
 
   const getProductListByCatId = async () => {
     try {
@@ -45,6 +50,27 @@ const TopProduct = () => {
       document.body.style.overflow = "hidden";
     }
   }, [getModal]);
+
+  const addToFavorite = async (vender_id) =>{
+    try {
+      if(!auth.token) {
+        console.log("Navigating to login page...");
+
+      return <Navigate to="/login" />;
+      } else {
+
+     const {data} = await addToFavoriteApi(auth.user.id,vender_id)
+     if(data.success) {
+      dispatch(setWishlistCount());
+       toast.success("Add To Favorite ");
+     }else{
+        toast.error("Add To Favorite failed ");
+     }
+    }
+    } catch (error) {
+    toast.error("Add To Favorite failed ");
+    }
+  }
 
   return (
     <Layout>
@@ -78,21 +104,27 @@ const TopProduct = () => {
           </div>
 
           <div className={`${Styles.row} ${Styles.categoryRow}`}>
-            {category &&
-              category.map((item) => {
+            {category.length > 0 &&
+              category[0].id != "No_data" &&
+              category?.map((item) => {
                 return (
                   <CategoryCard
                     to={`#`}
                     src={item?.variant[0].image}
-                    off={`${item.variant[0].discount}% Off`}
-                    time={convertToTime(item.distance, 30) ||  "0"}
                     productname={item.product_name}
                     rating={item.ratingTotal}
-                    productinfo="Pizzas, Pastas, Desserts, Fast Food....."
+                    productinfo={item.address}
                     address={item.address}
+                    variant="bestProduct"
+                    price={item?.variant[0].sale_price}
+                    strikePrice={item?.variant[0].strike_price}
+                    favoriteClick={()=>addToFavorite(item.id)}
                   />
                 );
               })}
+                          {category.length > 0 &&
+              category[0].id === "No_data" &&
+              "No Data Found !"}
             {/* <CategoryCard
                    to="#"
                    src="assets/image/category/watchx.png" 

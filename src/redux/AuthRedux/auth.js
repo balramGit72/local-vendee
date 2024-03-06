@@ -9,6 +9,9 @@ const initialState = {
 	zone_id:"",
 	setting:{},
 	otp: "",
+	email:"",
+	WishlistData :[],
+	WishlistDataCount: 0
 };
 
 const authSlice = createSlice({
@@ -35,11 +38,22 @@ const authSlice = createSlice({
 		setSetting(state, action){
 			state.setting=action.payload;
 		},
+		setWishlist(state, action){
+			state.WishlistData=action.payload;
+			state.WishlistDataCount= action.payload.length;
+		},
+		setWishlistCount(state){
+			state.WishlistDataCount += state.WishlistDataCount;
+		},
 		setOtp(state, action){
-			state.otp=action.payload;
-		}
+			state.otp=action.payload.otp;
+			state.email=action.payload.email;
+		},
+		logout(state) {
+			Object.assign(state, initialState);
+		  },
 	},
 });
 
-export const { setToken, clearToken, setLatAndLon, setLogin, setZone, setSetting, setOtp } = authSlice.actions;
+export const { setToken, clearToken, setLatAndLon, setLogin, setZone, setSetting, setOtp, setWishlist, logout, setWishlistCount } = authSlice.actions;
 export default authSlice.reducer;

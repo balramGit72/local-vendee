@@ -36,7 +36,7 @@ export const convertToTime = (distance,speed) => {
   if (!isNaN(distanceInMeters) && !isNaN(speedInMetersPerMinute)) {
     const timeInMinutes = distanceInMeters / speedInMetersPerMinute;
     const data =Math.floor(parseFloat(timeInMinutes))
-    return data;
+    return data || 0;
   } else {
     return 0;
   }

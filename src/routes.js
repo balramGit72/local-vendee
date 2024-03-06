@@ -60,7 +60,7 @@ export const routes = [
         isPrivate: 2
     },  
     {
-        path: "/details/:categoryId/:cartId",
+        path: "/details/:variantId",
         element: Details,
         exact: true,
         isPrivate: 2

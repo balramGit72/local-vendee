@@ -21,16 +21,23 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { setToken } from "../../../redux/AuthRedux/auth";
 import ImageWithText from "../../../components/ImageWithText";
+import { hCategoriesApi } from "../../../service/category";
 
 const Home = () => {
   const auth = useSelector((state) => state.auth);
+  console.log('auth: ', auth);
   const [loading, setLoading] = useState(true);
   const [sliderList, setSliderList] = useState([]);
   const [allCategory, setAllCategory] = useState([]);
   const [allCategory2, setAllCategory2] = useState([]);
   const [allCategory3, setAllCategory3] = useState([]);
+  console.log('allCategory3: ', allCategory3);
+  const [allCategory4Data, setAllCategory4Data] = useState([]);
+  console.log('allCategory4: ', allCategory4Data);
   const [top100Films, setOptions] = useState([]);
   const dispatch = useDispatch();
+
+  console.log(allCategory4Data);
 
   let debounceTimeout;
   const getSliderList = async () => {
@@ -69,6 +76,16 @@ const Home = () => {
     } catch (error) {}
   };
 
+
+  const hCategories = async () => {
+    try {
+      const { data } = await hCategoriesApi();
+      if (data.success) {
+        setAllCategory4Data(data.data);
+      }
+    } catch (error) {}
+  };
+
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true); // Set loading to true before API calls
@@ -77,6 +94,7 @@ const Home = () => {
         getAllCategory(),
         getAllCategory2(),
         getAllClasifiedCategory(),
+        hCategories(),
       ]);
       setLoading(false); // Set loading to false after API calls
     };
@@ -372,6 +390,46 @@ const Home = () => {
                       <SlideCard
                         to={`/top-product/${item.id}`}
                         src={item.banner}
+                        product={item.name}
+                      />
+                    );
+                  })
+                )}
+                {/* <SlideCard to={"#"} src="assets/image/category/watch.png" product="Smart watches" />
+                    <SlideCard to={"#"} src="assets/image/category/laptop.png" product="Laptops" />
+                    <SlideCard to={"#"} src="assets/image/category/camera.png" product="GoPro cameras " />
+                    <SlideCard to={"#"} src="assets/image/category/headphone.png" product="Headphones" />
+                    <SlideCard to={"#"} src="assets/image/category/canon.png" product="Canon camreras" />
+                    <SlideCard to={"#"} src="assets/image/category/boat.png" product="boAt Airdopes" />
+                    <SlideCard to={"#"} src="assets/image/category/watch.png" product="Smart watches" />
+                    <SlideCard to={"#"} src="assets/image/category/laptop.png" product="Laptops" />
+                    <SlideCard to={"#"} src="assets/image/category/camera.png" product="GoPro cameras " /> */}
+              </Slider>
+            </div>
+          </div>
+        </div>
+
+        <div className={`${Styles.ctegoryCardWrapper}`}>
+          <div className={`${Styles.center}`}>
+            <div className={`${Styles.categoryName}`}>
+              <Text
+                color="black"
+                strong="strong6"
+                className={`${Styles.categoryTitel} ${Styles.inter}`}
+              >
+                Local Vendee Service
+              </Text>
+            </div>
+            <div className={`categorySliderArrow ${Styles.cateGorySlide}`}>
+              <Slider {...cateGorysettings}>
+                {loading ? ( // Conditional rendering based on loading state
+                  <Loader /> // Show loader while loading
+                ) : (
+                  allCategory4Data.map((item) => {
+                    return (
+                      <SlideCard
+                        to={`#`}
+                        src={item.image}
                         product={item.name}
                       />
                     );

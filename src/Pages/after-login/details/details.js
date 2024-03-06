@@ -20,11 +20,11 @@ const Details = () => {
   const [cartItem, setCartItem] = useState();
   const [categoryDetailsList, setCategoryDetailsList] = useState(
     [{"id":"4","product_name":"product 1","variant":[{"variant_id":"11","product_id":"4","quantity":"1","name":"ddd","unit":"piece","sale_price":"31500","strike_price":"35000","type":"1","minPurchase":null,"maxPurchase":null,"tax":0,"discount":"10","card_qty":0,"image":"https:\/\/localvendee.com\/ci\/uploads\/product_image\/product_8.png"}],"productType":"1","distance":"5,527.55","ratingTotal":"0","ratingNum":"0","address":"428 Rideau St, Ottawa, ON K1N 5Z1, Canada"},{"id":"5","product_name":"product 2","variant":[{"variant_id":"12","product_id":"5","quantity":"1","name":"eee","unit":"piece","sale_price":"31500","strike_price":"35000","type":"1","minPurchase":null,"maxPurchase":null,"tax":0,"discount":"10","card_qty":0,"image":"https:\/\/localvendee.com\/ci\/uploads\/product_image\/product_8.png"}],"productType":"1","distance":"5,315.32","ratingTotal":"0","ratingNum":"0","address":"QR25+3F8, Chota Bangarda, Indore, Madhya Pradesh 452005, India"}]);
-  const { categoryId, cartId } = useParams();
+  const { variantId } = useParams();
 
   const shopSetting = async () => {
     try {
-      const { data } = await shopSettingApi(9, 1);
+      const { data } = await shopSettingApi(variantId, auth?.user?.id);
       if (data.success) {
         setCategoryDetails(data.data);
       }
@@ -33,9 +33,9 @@ const Details = () => {
 
   const productList = async () => {
     try {
-      const { data } = await productListApi(categoryId, auth?.user?.id);
+      const { data } = await productListApi(variantId, auth?.user?.id);
       if (data.success) {
-        // setCategoryDetailsList(data.data);
+        setCategoryDetailsList(data.data);
       }
     } catch (error) {}
   };

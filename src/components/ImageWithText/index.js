@@ -1,9 +1,9 @@
 import React from 'react';
 import './ImageWithText.css'; // Import CSS for styling
 
-const ImageWithText = ({ name }) => {
+const ImageWithText = ({ name, onClick }) => {
   return (
-    <div className="image-container">
+    <div onClick={onClick} className="image-container">
       <div className="overlay">{name[0]}</div>
     </div>
   );

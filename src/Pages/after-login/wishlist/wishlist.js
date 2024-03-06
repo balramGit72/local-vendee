@@ -2,12 +2,14 @@ import React, { useEffect, useState } from "react";
 import Styles from './wishlist.module.scss';
 import { Layout } from "../../../components/common";
 import { Text, Button, CategoryCard} from "../../../components/shared";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { getFavoritesApi } from "../../../service/classifiedProduct";
+import { setWishlist } from "../../../redux/AuthRedux/auth";
 
 const Wishlist = () => {
    const auth = useSelector((state) => state.auth);
-  const [favorites, setFavorites] = useState([]);
+//   const [favorites, setFavorites] = useState([]);
+  const dispatch = useDispatch();
 
   const getFavorites = async () => {
     try {
@@ -15,7 +17,7 @@ const Wishlist = () => {
          auth.user.id,
       );
       if (data.success) {
-         setFavorites(data.data);
+         dispatch(setWishlist(data.data));
       }
     } catch (error) {}
   };
@@ -37,7 +39,7 @@ const Wishlist = () => {
             </div>
               
               <div className={`${Styles.row} ${Styles.categoryRow}`}>
-               {favorites?.map((item)=>{
+               {auth?.WishlistData?.map((item)=>{
                   return <CategoryCard
                   to="#"
                   src={item.image} 

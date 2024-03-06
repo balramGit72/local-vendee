@@ -89,10 +89,10 @@ const Category = () => {
               category.map((item) => {
                 return (
                   <CategoryCard
-                    to={`/details/${id}/${item.id}`}
+                    to={`/details/${item?.variant[0].variant_id}`}
                     src={item?.variant[0].image}
                     off={`${item.variant[0].discount}% Off`}
-                    time={convertToTime(item.distance, 30) || 0}
+                    time={convertToTime(item.distance, 30) || '0'}
                     productname={item.product_name}
                     rating={item.ratingTotal}
                     productinfo="Pizzas, Pastas, Desserts, Fast Food....."

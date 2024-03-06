@@ -1,13 +1,58 @@
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Styles from "./header.module.scss";
 import { Button, Text, Image } from "../../shared";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import ImageWithText from "../../ImageWithText";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import persistStore from "redux-persist/es/persistStore";
 import { ToastContainer } from "react-toastify";
+import { getFavoritesApi } from "../../../service/classifiedProduct";
+import { logout, setWishlist } from "../../../redux/AuthRedux/auth";
+import { Menu, MenuItem } from "@mui/material";
+import store from "../../../redux/store";
 
 const Header = () => {
   const auth = useSelector((state) => state.auth);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const getFavorites = async () => {
+    try {
+      const { data } = await getFavoritesApi(
+         auth.user.id,
+      );
+      if (data.success) {
+         dispatch(setWishlist(data.data));
+      }
+    } catch (error) {}
+  };
+
+  useEffect(() => {
+    if(auth.user.id) {
+    getFavorites();
+    }
+  }, []);
+
+  const [anchorEl, setAnchorEl] = useState(null);
+
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const handleProfileClick = () => {
+    navigate("/edit-profile");
+    handleClose();
+  };
+
+  const handleLogoutClick = () => {
+    dispatch(logout());
+    navigate("/login");
+    handleClose();
+  };
+
   return (
     <div className={Styles.headerWraper}>
         <ToastContainer />
@@ -48,7 +93,19 @@ const Header = () => {
                 </Link>
               </Link>
             ) : (
-              <ImageWithText name={auth?.user?.name || 'Demo'} />
+              <>
+              <ImageWithText onClick={handleClick} name={auth?.user?.name || 'Demo'} />
+              <div>
+              <Menu
+                anchorEl={anchorEl}
+                open={Boolean(anchorEl)}
+                onClose={handleClose}
+              >
+                <MenuItem onClick={handleProfileClick}> <span class="material-symbols-rounded">person</span> Profile</MenuItem>
+                <MenuItem onClick={handleLogoutClick}><span class="material-symbols-rounded">logout</span> Logout</MenuItem>
+              </Menu>
+            </div>
+            </>
             )}
 
             {/* <Link to={"#"} className={`${Styles.loginRegister} ${Styles.centerAlign}`}>
@@ -58,12 +115,13 @@ const Header = () => {
                   Johan Doe
                 </Link> */}
             <Button className={`${Styles.favBtn}`}>
-            <Link to="/wishlist" >
+            <Link to={auth.token ? "/wishlist" : "/login"} >
               <span class="material-symbols-rounded">favorite</span>
+              {auth?.WishlistDataCount || ''}
               </Link>
             </Button>
             <Button>
-            <Link to="/payment" >
+            <Link to={auth.token ? "/payment" : "/login"} >
               <span class="material-symbols-rounded">shopping_cart</span>
               </Link>
             </Button>
